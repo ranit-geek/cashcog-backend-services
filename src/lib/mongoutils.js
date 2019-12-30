@@ -10,29 +10,26 @@ async function insertIntoDb(req){
 }
 
 
-async function queryCustom(payload)
+async function queryCustom(findPayload,sortPayload)
 {
-    const result= await Event.find(payload)
+    const result= await Event.find(findPayload).sort(sortPayload)
+    console.log(findPayload)
     return result
-    
 }
 
-
-async function fetchAll()
+async function fetchAll(sortPayload)
 {
-        const result = await Event.find()
+   
+        const result = await Event.find().sort(sortPayload )
         console.log(result)
-        return result
-
+        return result     
 }
 
 async function update(query,payload)
 {
     const result= await Event.findOneAndUpdate(query,payload,{new : true})
-    return result
-    
+    return result   
 }
-
 
 exports.insertIntoDb=insertIntoDb
 exports.fetchAll=fetchAll
