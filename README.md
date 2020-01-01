@@ -9,11 +9,11 @@ This is the backend api for cashcog expenses approval system. This GraphQL api e
 ```
 
 3. In ecosystem.config.js fill in the MongoDB connection string where the expense events are stored by cashcog-consumer.
-3. Run the following command from the root folder:
+4. Run the following command from the root folder:
 ```
     npm install
 ```
-4. Run the following command from the root folder:
+5. Run the following command from the root folder:
 ```
     pm2 start ecosystem.config.js --env production
 ```
