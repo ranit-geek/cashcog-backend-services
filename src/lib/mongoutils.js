@@ -10,9 +10,10 @@ async function insertIntoDb(req){
 }
 
 
-async function queryCustom(findPayload,sortPayload)
+async function queryCustom(findPayload,sortPayload,skip,limit)
 {
-    const result= await Event.find(findPayload).sort(sortPayload)
+
+    const result= await Event.find(findPayload).skip(skip).limit(limit).sort(sortPayload)
     console.log(findPayload)
     return result
 }

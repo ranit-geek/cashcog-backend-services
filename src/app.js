@@ -27,7 +27,7 @@ app.use('/graphql', graphqlHttp({
 
         type RootQuery {
             events : [Event!]!
-            searchEvents(filter: EventFilterInput, sort:EventSortInput ): [Event!]!
+            searchEvents(filter: EventFilterInput, sort:EventSortInput, limit: Int, offset: Int ): [Event!]!
             searchByEmployee (filter: EmployeeFilterInput): [Event!]!
         }
         type RootMutation {
@@ -43,10 +43,10 @@ app.use('/graphql', graphqlHttp({
             _id: ID
             uuid: String
             description: String
-            created_at:  DateTime
+            startingDate : DateTime
+            endingDate :DateTime
             minAmount: Float
             maxAmount: Float
-            amount : Float
             currency: String
             approvalStatus: [String]
     
@@ -94,17 +94,25 @@ app.use('/graphql', graphqlHttp({
             return mongoUtil.update({_id : args._id}, {approvalStatus : args.approvalStatus})
         },
         searchEvents: async (args)=>{  
+            Object.keys(args["filter"] ).forEach((key) => (args["filter"] [key] == null || args["filter"] [key]=="null") && delete args["filter"] [key]);
             if ("minAmount" && "maxAmount" in args["filter"])
             {
                 args.filter.amount = { $gte :  args.filter.minAmount,$lte :  args.filter.maxAmount}
-                args.filter.minAmount = undefined
-                args.filter.maxAmount = undefined
+                delete args.filter.minAmount 
+                delete args.filter.maxAmount 
             } 
-            Object.keys(args["filter"] ).forEach((key) => (args["filter"] [key] == null) && delete args["filter"] [key]);
+            if("startingDate" && "endingDate" in args["filter"])
+            {
+                args.filter.created_at = { $gte :  args.filter.startingDate,$lte :  args.filter.endingDate}
+                args.filter.startingDate = undefined
+                args.filter.endingDate = undefined
+            }
+            
             var sortQuery = {}
             sortQuery[args.sort.field] = args.sort.order
+            console.log(args["filter"])
             
-            return mongoUtil.queryCustom(args["filter"] , sortQuery)
+            return mongoUtil.queryCustom(args["filter"] , sortQuery, args["offset"], args["limit"])
         },
         searchByEmployee: async(args)=>{
             
