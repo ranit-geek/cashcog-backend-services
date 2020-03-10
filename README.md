@@ -18,5 +18,3 @@ This is the backend api for cashcog expenses approval system. This GraphQL api e
     pm2 start ecosystem.config.js --env production
 ```
 This will start the server at http://localhost:5000/graphql
-
-### Live Demo: http://35.193.38.221:9090/graphql
